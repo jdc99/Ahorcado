@@ -9,5 +9,30 @@ package pkg;
  * @author ifram
  */
 public class Jugador {
+
+    private final int id;
+    private final String nombre;
+    private int partidasGanadas;
+
+    public Jugador(int id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+        partidasGanadas = 0;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
     
+    public void ganarPartida() {
+        partidasGanadas++;
+    }
+    
+    public void resetPartidas() {
+        partidasGanadas = 0;
+    }
 }
