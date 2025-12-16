@@ -27,11 +27,15 @@ public class Jugador {
     public String getNombre() {
         return nombre;
     }
-    
+
+    public int getPartidasGanadas() {
+        return partidasGanadas;
+    }
+
     public void ganarPartida() {
         partidasGanadas++;
     }
-    
+
     public void resetPartidas() {
         partidasGanadas = 0;
     }

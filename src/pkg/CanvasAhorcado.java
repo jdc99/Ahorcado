@@ -5,11 +5,22 @@
 package pkg;
 
 import java.awt.Canvas;
+import java.awt.Graphics;
 
 /**
  *
  * @author ifram
  */
 public class CanvasAhorcado extends Canvas {
-    
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    @Override
+    public void update(Graphics g) {
+        paint(g); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
 }

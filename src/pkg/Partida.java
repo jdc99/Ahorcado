@@ -10,24 +10,24 @@ package pkg;
  */
 public class Partida {
 
-    private static final int MAXIMO_INTENTOS = 6;
+    public static final int MAXIMO_INTENTOS = 6;
 
-    private final String palabra;
+    private final char[] palabra;
     private final CanvasAhorcado canvas;
 
     private int numIntentos;
 
-    public Partida(String palabra, Jugador adivinador, Jugador retador, CanvasAhorcado canvas) {
+    public Partida(char[] palabra, Jugador adivinador, Jugador retador, CanvasAhorcado canvas) {
         this.palabra = palabra;
         this.canvas = canvas;
 
-        numIntentos = MAXIMO_INTENTOS;
+        numIntentos = 0;
     }
 
     public char[] comprobarPalabra(char[] intento) {
-        numIntentos--;
+        numIntentos++;
 
-        var palabraCaracterizada = palabra.toCharArray();
+        var palabraCaracterizada = palabra;
         var numCaracteres = palabraCaracterizada.length;
 
         char[] respuesta = new char[numCaracteres];

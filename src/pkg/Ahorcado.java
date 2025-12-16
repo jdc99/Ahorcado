@@ -4,17 +4,66 @@
  */
 package pkg;
 
+import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 /**
  *
  * @author ifram
  */
-public class Ahorcado extends java.awt.Frame {
+public class Ahorcado extends java.awt.Frame implements ActionListener {
+
+    private static final int MAX_PARTIDAS = 5;
+    private final Partida[] partidas = new Partida[MAX_PARTIDAS];
+
+    private Jugador[] jugadores = null;
+    private char[] palabra = null;
+    private char[] ultimoIntento = null;
+    private int numPartida;
+    private int punteroJugadores;
 
     /**
      * Creates new form Ahorcado
      */
     public Ahorcado() {
         initComponents();
+        addListeners();
+
+    }
+
+    private void addListeners() {
+        buttonAceptarIntento.addActionListener(this);
+        buttonAceptarNombres.addActionListener(this);
+        buttonAceptarPalabra.addActionListener(this);
+        buttonNuevaPartida.addActionListener(this);
+        buttonSalir.addActionListener(this);
+    }
+
+    private void determinarGanador() {
+        labelNombreJugador1.setText(jugadores[0].getNombre());
+        labelNombreJugador2.setText(jugadores[1].getNombre());
+        labelResultadosJugador1.setText(String.valueOf(jugadores[0].getPartidasGanadas()));
+        labelResultadosJugador2.setText(String.valueOf(jugadores[1].getPartidasGanadas()));
+        if (jugadores[0].getPartidasGanadas() > jugadores[1].getPartidasGanadas()) {
+            labelGanador.setText(jugadores[0].getNombre());
+        } else {
+            labelGanador.setText(jugadores[1].getNombre());
+        }
+    }
+
+    private boolean palabraAcertada(char[] s) {
+        return !String.valueOf(s).contains(" ");
+    }
+
+    private void cambiarMenu(Panel panel) {
+        panelAhorcado.setVisible(false);
+        panelDatos.setVisible(false);
+        panelMenu.setVisible(false);
+        panelPalabra.setVisible(false);
+        panelGanador.setVisible(false);
+
+        panel.setVisible(true);
     }
 
     /**
@@ -25,11 +74,287 @@ public class Ahorcado extends java.awt.Frame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        panelMenu = new java.awt.Panel();
+        labelTitulo = new java.awt.Label();
+        buttonNuevaPartida = new java.awt.Button();
+        buttonSalir = new java.awt.Button();
+        panelDatos = new java.awt.Panel();
+        textFieldJugador2 = new java.awt.TextField();
+        textFieldJugador1 = new java.awt.TextField();
+        label1 = new java.awt.Label();
+        label2 = new java.awt.Label();
+        label3 = new java.awt.Label();
+        buttonAceptarNombres = new java.awt.Button();
+        panelAhorcado = new java.awt.Panel();
+        canvasAhorcado = new CanvasAhorcado();
+        textFieldIntento = new java.awt.TextField();
+        label4 = new java.awt.Label();
+        buttonAceptarIntento = new java.awt.Button();
+        panelGanador = new java.awt.Panel();
+        label6 = new java.awt.Label();
+        labelNombreJugador1 = new java.awt.Label();
+        labelNombreJugador2 = new java.awt.Label();
+        labelResultadosJugador2 = new java.awt.Label();
+        labelResultadosJugador1 = new java.awt.Label();
+        label7 = new java.awt.Label();
+        labelGanador = new java.awt.Label();
+        panelPalabra = new java.awt.Panel();
+        label5 = new java.awt.Label();
+        jPasswordFieldPalabra = new javax.swing.JPasswordField();
+        buttonAceptarPalabra = new java.awt.Button();
+        labelNombreJugadorRetador = new java.awt.Label();
+
+        labelTitulo.setAlignment(java.awt.Label.CENTER);
+        labelTitulo.setFont(new java.awt.Font("Bernard MT Condensed", 3, 48)); // NOI18N
+        labelTitulo.setText("EL AHORCADO");
+
+        buttonNuevaPartida.setActionCommand("jugar");
+        buttonNuevaPartida.setLabel("Jugar");
+
+        buttonSalir.setActionCommand("salir");
+        buttonSalir.setLabel("Salir");
+
+        javax.swing.GroupLayout panelMenuLayout = new javax.swing.GroupLayout(panelMenu);
+        panelMenu.setLayout(panelMenuLayout);
+        panelMenuLayout.setHorizontalGroup(
+            panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMenuLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(buttonNuevaPartida, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 86, Short.MAX_VALUE)
+                .addComponent(buttonSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addComponent(labelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        panelMenuLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {buttonNuevaPartida, buttonSalir});
+
+        panelMenuLayout.setVerticalGroup(
+            panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelMenuLayout.createSequentialGroup()
+                .addComponent(labelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(buttonSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonNuevaPartida, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        panelMenuLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {buttonNuevaPartida, buttonSalir});
+
+        textFieldJugador2.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+
+        label1.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
+        label1.setText("Jugador 1");
+
+        label2.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
+        label2.setText("Jugador 2");
+
+        label3.setAlignment(java.awt.Label.CENTER);
+        label3.setFont(new java.awt.Font("Dubai Light", 1, 18)); // NOI18N
+        label3.setText("Introduce los nombres de los jugadores");
+
+        buttonAceptarNombres.setActionCommand("aceptarNombres");
+        buttonAceptarNombres.setLabel("Aceptar");
+
+        javax.swing.GroupLayout panelDatosLayout = new javax.swing.GroupLayout(panelDatos);
+        panelDatos.setLayout(panelDatosLayout);
+        panelDatosLayout.setHorizontalGroup(
+            panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDatosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelDatosLayout.createSequentialGroup()
+                        .addGroup(panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textFieldJugador1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textFieldJugador2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(buttonAceptarNombres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
+        );
+
+        panelDatosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {textFieldJugador1, textFieldJugador2});
+
+        panelDatosLayout.setVerticalGroup(
+            panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDatosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textFieldJugador1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textFieldJugador2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(buttonAceptarNombres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        panelDatosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {label1, label2, textFieldJugador1, textFieldJugador2});
+
+        textFieldIntento.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+
+        label4.setText("Introduce aqui tu intento:");
+
+        buttonAceptarIntento.setActionCommand("aceptarIntento");
+        buttonAceptarIntento.setLabel("Aceptar");
+
+        javax.swing.GroupLayout panelAhorcadoLayout = new javax.swing.GroupLayout(panelAhorcado);
+        panelAhorcado.setLayout(panelAhorcadoLayout);
+        panelAhorcadoLayout.setHorizontalGroup(
+            panelAhorcadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAhorcadoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(textFieldIntento, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(buttonAceptarIntento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(panelAhorcadoLayout.createSequentialGroup()
+                .addComponent(canvasAhorcado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        panelAhorcadoLayout.setVerticalGroup(
+            panelAhorcadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelAhorcadoLayout.createSequentialGroup()
+                .addComponent(canvasAhorcado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(panelAhorcadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textFieldIntento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonAceptarIntento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        panelAhorcadoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {buttonAceptarIntento, label4, textFieldIntento});
+
+        label6.setAlignment(java.awt.Label.CENTER);
+        label6.setFont(new java.awt.Font("Corbel", 1, 36)); // NOI18N
+        label6.setText("RESULTADOS");
+
+        labelNombreJugador1.setAlignment(java.awt.Label.RIGHT);
+        labelNombreJugador1.setText("label7");
+
+        labelNombreJugador2.setAlignment(java.awt.Label.RIGHT);
+        labelNombreJugador2.setText("label7");
+
+        labelResultadosJugador2.setText("label7");
+
+        labelResultadosJugador1.setText("label7");
+
+        label7.setAlignment(java.awt.Label.CENTER);
+        label7.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        label7.setText("GANADOR");
+
+        labelGanador.setAlignment(java.awt.Label.CENTER);
+        labelGanador.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
+        labelGanador.setText("label8");
+
+        javax.swing.GroupLayout panelGanadorLayout = new javax.swing.GroupLayout(panelGanador);
+        panelGanador.setLayout(panelGanadorLayout);
+        panelGanadorLayout.setHorizontalGroup(
+            panelGanadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelGanadorLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelGanadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(labelGanador, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(label7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(label6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.CENTER, panelGanadorLayout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(panelGanadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelNombreJugador1, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelNombreJugador2, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(panelGanadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelResultadosJugador2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelResultadosJugador1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10))
+        );
+
+        panelGanadorLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {labelResultadosJugador1, labelResultadosJugador2});
+
+        panelGanadorLayout.setVerticalGroup(
+            panelGanadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelGanadorLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(label6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelGanadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelGanadorLayout.createSequentialGroup()
+                        .addComponent(labelResultadosJugador1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelResultadosJugador2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelGanadorLayout.createSequentialGroup()
+                        .addComponent(labelNombreJugador1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelNombreJugador2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(label7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelGanador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        panelGanadorLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {labelNombreJugador1, labelNombreJugador2, labelResultadosJugador1, labelResultadosJugador2});
+
+        label5.setFont(new java.awt.Font("Corbel", 1, 24)); // NOI18N
+        label5.setText("Introduce la palabra a adivinar:");
+
+        jPasswordFieldPalabra.setAutoscrolls(false);
+
+        buttonAceptarPalabra.setActionCommand("aceptarPalabra");
+        buttonAceptarPalabra.setLabel("Aceptar");
+
+        labelNombreJugadorRetador.setText("label8");
+
+        javax.swing.GroupLayout panelPalabraLayout = new javax.swing.GroupLayout(panelPalabra);
+        panelPalabra.setLayout(panelPalabraLayout);
+        panelPalabraLayout.setHorizontalGroup(
+            panelPalabraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPalabraLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelPalabraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelPalabraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelPalabraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(label5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPasswordFieldPalabra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(buttonAceptarPalabra, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelNombreJugadorRetador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        panelPalabraLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {buttonAceptarPalabra, jPasswordFieldPalabra, label5});
+
+        panelPalabraLayout.setVerticalGroup(
+            panelPalabraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPalabraLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(label5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelNombreJugadorRetador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPasswordFieldPalabra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(buttonAceptarPalabra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 exitForm(evt);
             }
         });
+        setLayout(new javax.swing.OverlayLayout(this));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -45,14 +370,127 @@ public class Ahorcado extends java.awt.Frame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Ahorcado().setVisible(true);
-            }
-        });
+        final int ANCHO = 400;
+        final int ALTO = 260;
+
+        Ahorcado ahorcado = new Ahorcado();
+        ahorcado.add(ahorcado.panelMenu);
+        ahorcado.add(ahorcado.panelDatos);
+        ahorcado.add(ahorcado.panelPalabra);
+        ahorcado.add(ahorcado.panelAhorcado);
+        ahorcado.add(ahorcado.panelGanador);
+
+        ahorcado.setSize(ANCHO, ALTO);
+        ahorcado.setTitle("Ahorcado");
+        ahorcado.setResizable(false);
+        ahorcado.setLocationRelativeTo(null);
+        ahorcado.setVisible(true);
+
+        ahorcado.cambiarMenu(ahorcado.panelMenu);
     }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private java.awt.Button buttonAceptarIntento;
+    private java.awt.Button buttonAceptarNombres;
+    private java.awt.Button buttonAceptarPalabra;
+    private java.awt.Button buttonNuevaPartida;
+    private java.awt.Button buttonSalir;
+    private java.awt.Canvas canvasAhorcado;
+    private javax.swing.JPasswordField jPasswordFieldPalabra;
+    private java.awt.Label label1;
+    private java.awt.Label label2;
+    private java.awt.Label label3;
+    private java.awt.Label label4;
+    private java.awt.Label label5;
+    private java.awt.Label label6;
+    private java.awt.Label label7;
+    private java.awt.Label labelGanador;
+    private java.awt.Label labelNombreJugador1;
+    private java.awt.Label labelNombreJugador2;
+    private java.awt.Label labelNombreJugadorRetador;
+    private java.awt.Label labelResultadosJugador1;
+    private java.awt.Label labelResultadosJugador2;
+    private java.awt.Label labelTitulo;
+    private java.awt.Panel panelAhorcado;
+    private java.awt.Panel panelDatos;
+    private java.awt.Panel panelGanador;
+    private java.awt.Panel panelMenu;
+    private java.awt.Panel panelPalabra;
+    private java.awt.TextField textFieldIntento;
+    private java.awt.TextField textFieldJugador1;
+    private java.awt.TextField textFieldJugador2;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        switch (e.getActionCommand()) {
+            case "jugar" -> {
+                numPartida = -1;
+                punteroJugadores = 0;
+                cambiarMenu(panelDatos);
+            }
+            case "aceptarNombres" -> {
+                var j1 = new Jugador(System.identityHashCode(System.currentTimeMillis()), textFieldJugador1.getText());
+                var j2 = new Jugador(System.identityHashCode(System.currentTimeMillis()), textFieldJugador2.getText());
+
+                jugadores = new Jugador[]{j1, j2};
+
+                labelNombreJugadorRetador.setText(jugadores[punteroJugadores % 2].getNombre());
+                cambiarMenu(panelPalabra);
+            }
+            case "aceptarPalabra" -> {
+                numPartida++;
+
+                if (numPartida >= MAX_PARTIDAS) {
+                    determinarGanador();
+                    cambiarMenu(panelGanador);
+                } else {
+                    palabra = jPasswordFieldPalabra.getPassword();
+                    partidas[numPartida] = new Partida(palabra, jugadores[(punteroJugadores + 2) % 2], jugadores[(punteroJugadores + 1) % 2], (CanvasAhorcado) canvasAhorcado);
+                    punteroJugadores++;
+                    cambiarMenu(panelAhorcado);
+                }
+            }
+            case "aceptarIntento" -> {
+                if (partidas[numPartida].getNumIntentos() >= Partida.MAXIMO_INTENTOS) {
+                    punteroJugadores++;
+                    labelNombreJugadorRetador.setText(jugadores[punteroJugadores % 2].getNombre());
+                    cambiarMenu(panelPalabra);
+
+                } else {
+
+                    var intento = textFieldIntento.getText().toCharArray();
+
+                    var resultado = partidas[numPartida].comprobarPalabra(intento);
+
+                    if (palabraAcertada(resultado)) {
+                        jugadores[(punteroJugadores + 2) % 2].ganarPartida();
+                        labelNombreJugadorRetador.setText(jugadores[punteroJugadores % 2].getNombre());
+                        cambiarMenu(panelPalabra);
+                    } else if (ultimoIntento == null) {
+                        ultimoIntento = resultado;
+                    } else {
+                        for (int i = 0; i < ultimoIntento.length; i++) {
+                            if (ultimoIntento[i] != ' ') {
+                                resultado[i] = ultimoIntento[i];
+                            }
+                        }
+                        ultimoIntento = resultado;
+
+                        if (palabraAcertada(resultado)) {
+                            jugadores[(punteroJugadores + 2) % 2].ganarPartida();
+                            labelNombreJugadorRetador.setText(jugadores[punteroJugadores % 2].getNombre());
+                            cambiarMenu(panelPalabra);
+                        }
+                    }
+                }
+            }
+            case "salir" -> {
+                System.exit(0);
+            }
+            default ->
+                throw new AssertionError();
+        }
+    }
 }
